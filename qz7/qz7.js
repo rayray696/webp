@@ -34,4 +34,8 @@ var data = {
       ]
 }
 for(var i=0;i<4;i++)
+{
+    var time=data.data[i].rectime
+}
+
 
