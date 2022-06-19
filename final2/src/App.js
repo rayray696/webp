@@ -20,9 +20,9 @@ const style = {
   p: 4,
 };
 function App() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [openSignIn,setOpenSignIn]=useState(false);
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [posts, setPosts] = useState([]);
@@ -32,6 +32,10 @@ function App() {
       if (authUser) {
         console.log(authUser);
         setUser(authUser);
+        if(authUser.displayName){
+
+        }
+    
       } else {
         setUser(null);
       }
@@ -40,11 +44,16 @@ function App() {
       unsubscribe();
     }
   }, [user, username]);
+
   useEffect(() => {
-    db.collection('posts').onSnapshot(snapshot => {
-      setPosts(snapshot.docs.map(doc => doc.data()));
+    db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      setPosts(snapshot.docs.map(doc => ({
+        id: doc.id,
+        post:doc.data()
+      })));
     })
   }, [posts]);
+
   const signUp = (event) => {
     event.preventDefault();
     auth
@@ -57,6 +66,7 @@ function App() {
     .catch((error) => alert(error.message))
     setOpen(false);
   }
+
   const signIn=(event)=>{
     event.preventDefault();
     auth
@@ -67,10 +77,11 @@ function App() {
 
   return (
     <div className='app'>
-      {user.displayName?(
-      <ImageUpload username={user.displayName}/>
+
+      {user?.displayName ?(
+        <ImageUpload username={user.displayName} />
       ): (
-          <h3>Sorry you need to login</h3>
+        <h3>sorry need to login to upload</h3>
       )}
 
       <Modal
@@ -86,7 +97,7 @@ function App() {
                 placeholder="username"
                 type="test"
                 value={username}
-                onChange={(e) => setusername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <Input
                 placeholder="email"
@@ -101,11 +112,33 @@ function App() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Typography>
-            <Button type="submit" onClick={signUp}>Sign UP</Button>
+            <Button type="submit" onClick={signUp}>Sign Up</Button>
           </Box>
-      
       </Modal>
-
+      <Modal
+        open={openSignIn}
+        onClose={() => setOpenSignIn(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" className='app__signup'>
+              <Input
+                placeholder="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                placeholder="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Typography>
+            <Button type="submit" onClick={signIn}>Sign In</Button>
+          </Box>
+      </Modal>
       <div className='app_header'>
         <img
           className="app__headerImage"
