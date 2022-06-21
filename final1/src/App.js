@@ -21,7 +21,7 @@ const style = {
 function App() {
   const [open, setOpen] = React.useState(false);
   const [openSignIn,setOpenSignIn]=useState(false);
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [posts, setPosts] = useState([]);
@@ -79,7 +79,7 @@ function App() {
                 placeholder="username"
                 type="test"
                 value={username}
-                onChange={(e) => setusername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <Input
                 placeholder="email"
@@ -94,8 +94,34 @@ function App() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Typography>
-            <Button type="submit" onClick={signUp}>Sign UP</Button>
+            <Button type="submit" onClick={signUp}>Sign Up</Button>
           </Box>
+      </Modal>
+      <Modal
+        open={openSignIn}
+        onClose={() => setOpenSignIn(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" className='app__signup'>
+              <Input
+                placeholder="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                placeholder="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Typography>
+            <Button type="submit" onClick={signIn}>Sign In</Button>
+          </Box>
+
+        
       
       </Modal>
 
